@@ -8,9 +8,10 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-app.get("/test", (req, res) => {
-  res.json({ message: "Hello from API!" });
+app.get("/", (req, res) => {
+  res.json({ message: "Hello. Welcome to Starlynx API!" });
 });
+
 app.post("/ussd", (req, res) => {
   // Read the variables sent via POST from our API
   const { sessionId, serviceCode, phoneNumber, text } = req.body;

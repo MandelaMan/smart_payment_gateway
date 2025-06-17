@@ -1,0 +1,30 @@
+name: Deploy to DigitalOcean
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Set up SSH with custom key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.DO_SSH_KEY }}" > ~/.ssh/github-actions
+          chmod 600 ~/.ssh/github-actions
+          ssh-keyscan -H ${{ secrets.DO_HOST }} >> ~/.ssh/known_hosts
+
+      - name: Deploy Application via SSH
+        run: |
+          ssh -i ~/.ssh/github-actions ${{ secrets.DO_USER }}@${{ secrets.DO_HOST }} << 'EOF'
+            cd ${{ secrets.APP_DIR }}
+            git pull origin main
+            yarn install --production
+            pm2 restart smart_payment_gateway || pm2 start yarn --name smart_payment_gateway -- start
+          EOF
