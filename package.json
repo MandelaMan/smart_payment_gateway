@@ -5,9 +5,7 @@
   "license": "MIT",
   "scripts": {
     "dev": "nodemon index.js",
-    "start": "node index.js",
-    "build": "npm install & npm run build",
-    "vercel-build": "echo hello"
+    "start": "node index.js"
   },
   "dependencies": {
     "axios": "^1.6.8",
