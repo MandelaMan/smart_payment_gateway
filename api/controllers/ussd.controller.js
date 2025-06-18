@@ -10,17 +10,16 @@ module.exports = {
             2. Existing Customer`;
     } else if (text == "1") {
       // Business logic for first level response
-      response = `CON Choose account information you want to view
-            1. Account number`;
+      response = `CON Please enter your Customer Number`;
     } else if (text == "2") {
       // Business logic for first level response
       // This is a terminal request. Note how we start the response with END
       response = `END Your phone number is ${phoneNumber}`;
     } else if (text == "1*1") {
       // This is a second level response where the user selected 1 in the first instance
-      const accountNumber = "ACC100101";
+      const customerNumber = "ENK-1234";
       // This is a terminal request. Note how we start the response with END
-      response = `END Your account number is ${accountNumber}`;
+      response = `END Your account number is ${customerNumber}`;
     }
     // Send the response back to the API
     res.set("Content-Type: text/plain");
