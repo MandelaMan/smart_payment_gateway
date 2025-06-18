@@ -30,10 +30,10 @@ jobs:
             cd ${{ secrets.DEPLOY_PATH }}
             yarn install --production
 
-            # Reload or start the correct app
+            # Start or restart using correct entry file
             pm2 describe smart_payment_gateway > /dev/null \
               && pm2 restart smart_payment_gateway \
-              || pm2 start yarn --name smart_payment_gateway -- start
+              || pm2 start api/index.js --name smart_payment_gateway
 
             pm2 save
           EOF
