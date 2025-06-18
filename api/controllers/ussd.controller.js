@@ -1,25 +1,32 @@
 module.exports = {
   initiateUSSD: (req, res) => {
+    const accountStatus = "Account status: Active";
     // Read the variables sent via POST from our API
     const { sessionId, serviceCode, phoneNumber, text } = req.body;
     let response = "";
-    if (text == "") {
+    if (text == "" || text == 0) {
       // This is the first request. Note how we start the response with CON
       response = `CON Welcome to Starlynx Communications. Select from the options below
-            1. New Customer
-            2. Existing Customer`;
+            1. Register - New Customer
+            2. My Account`;
     } else if (text == "1") {
       // Business logic for first level response
-      response = `CON Please enter your Customer Number`;
+      response = `END Please call 0713 400 200 or visit https://starlynx.biz/`;
     } else if (text == "2") {
-      // Business logic for first level response
-      // This is a terminal request. Note how we start the response with END
-      response = `END Your phone number is ${phoneNumber}`;
-    } else if (text == "1*1") {
-      // This is a second level response where the user selected 1 in the first instance
-      const customerNumber = "ENK-1234";
-      // This is a terminal request. Note how we start the response with END
-      response = `END Your account number is ${customerNumber}`;
+      // This is the first request. Note how we start the response with CON
+      response = `CON Please enter your Customer Number`;
+    } else if (text == "1*2") {
+      response = `CON ${accountStatus}. Select from the options below
+        1. Renew Subscription
+        2. Upgrade Subscription
+        3. Cancel Subscription
+        0. Main Menu`;
+    } else if (text == "1*2*1") {
+      response = `END Renew Subscription`;
+    } else if (text == "1*2*2") {
+      response = `END Upgrade Subscription`;
+    } else if (text == "1*2*3") {
+      response = `END Cancel Subscription`;
     }
     // Send the response back to the API
     res.set("Content-Type: text/plain");
