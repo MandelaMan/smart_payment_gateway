@@ -15,9 +15,11 @@ module.exports = {
     } else if (text == "2") {
       // This is the first request. Note how we start the response with CON
       response = `CON Please enter your Customer Number`;
-    } else if (text != "") {
+    } else if (text) {
       // This is the first request. Note how we start the response with CON
       response = `END ${text}`;
+    } else if (text.length < 2) {
+      response = `CON Invalid Customer Number. Re-enter your Customer Number`;
     }
 
     // Send the response back to the API
