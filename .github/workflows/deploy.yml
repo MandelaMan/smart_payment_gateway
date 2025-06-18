@@ -28,6 +28,7 @@ jobs:
         run: |
           ssh ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} << 'EOF'
             cd ${{ secrets.DEPLOY_PATH }}
-            yarn install
-            pm2 restart app || pm2 start index.js --name "app"
+            yarn install --production
+            pm2 describe smart_payment_gateway > /dev/null && pm2 reload smart_payment_gateway || pm2 start index.js --name smart_payment_gateway
+            pm2 save
           EOF
