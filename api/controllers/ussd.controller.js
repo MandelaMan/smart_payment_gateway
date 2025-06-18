@@ -16,8 +16,11 @@ module.exports = {
       // This is the first request. Note how we start the response with CON
       response = `CON Please enter your Customer Number`;
     } else if (text) {
-      // This is the first request. Note how we start the response with CON
-      response = `END ${text}`;
+      response = `CON ${accountStatus}. Select from the options below
+        1. Renew Subscription
+        2. Upgrade Subscription
+        3. Cancel Subscription
+        0. Main Menu`;
     } else if (text.length < 2) {
       response = `CON Invalid Customer Number. Re-enter your Customer Number`;
     }
