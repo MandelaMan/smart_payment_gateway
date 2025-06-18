@@ -1,28 +1,29 @@
 module.exports = {
   initiateUSSD: (req, res) => {
-    const accountStatus = "Account status: Active";
-    // Read the variables sent via POST from our API
-    const { sessionId, serviceCode, phoneNumber, text } = req.body;
-    let response = "";
-    if (text == "" || text == 0) {
-      // This is the first request. Note how we start the response with CON
-      response = `CON Welcome to Starlynx Communications. Select from the options below
-            1. Register - New Customer
-            2. My Account`;
-    } else if (text == "1") {
-      // Business logic for first level response
-      response = `END Please call 0713 400 200 or visit https://starlynx.biz/`;
-    } else if (text == "2") {
-      // This is the first request. Note how we start the response with CON
-      response = `CON Please enter your Customer Number`;
-    } else if (text) {
-      response = `CON ${accountStatus}. Select from the options below
-        1. Renew Subscription
-        2. Upgrade Subscription
-        3. Cancel Subscription
-        0. Main Menu`;
-    } else if (text.length < 2) {
-      response = `CON Invalid Customer Number. Re-enter your Customer Number`;
+    const { sessionId, serviceCode, phoneNumber, text = "" } = req.body;
+    const parts = text.split("*");
+    let response;
+
+    if (text === "") {
+      response = `CON Welcome! What would you like to do?
+                1. My account
+                2. My phone number`;
+    } else if (parts[0] === "1" && parts.length === 1) {
+      response = `CON Enter your account number:`;
+    } else if (parts[0] === "2") {
+      response = `END Your phone number is ${phoneNumber}`;
+    } else if (parts[0] === "1" && parts.length === 2) {
+      const acct = parts[1].trim();
+      const info = { balance: 2540.75, name: "Alice Kyalo" };
+      if (!info) {
+        response = `END Sorry, account ${acct} not found.`;
+      } else {
+        response = `END Hello ${
+          info.name
+        }!\nAccount: ${acct}\nBalance: KES ${info.balance.toFixed(2)}`;
+      }
+    } else {
+      response = `END Invalid choice. Please try again.`;
     }
 
     // Send the response back to the API
