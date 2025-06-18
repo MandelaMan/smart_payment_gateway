@@ -15,19 +15,11 @@ module.exports = {
     } else if (text == "2") {
       // This is the first request. Note how we start the response with CON
       response = `CON Please enter your Customer Number`;
-    } else if (text == "1*2") {
-      response = `CON ${accountStatus}. Select from the options below
-        1. Renew Subscription
-        2. Upgrade Subscription
-        3. Cancel Subscription
-        0. Main Menu`;
-    } else if (text == "1*2*1") {
-      response = `END Renew Subscription`;
-    } else if (text == "1*2*2") {
-      response = `END Upgrade Subscription`;
-    } else if (text == "1*2*3") {
-      response = `END Cancel Subscription`;
+    } else if (text != "") {
+      // This is the first request. Note how we start the response with CON
+      response = `END ${text}`;
     }
+
     // Send the response back to the API
     res.set("Content-Type: text/plain");
     res.send(response);
