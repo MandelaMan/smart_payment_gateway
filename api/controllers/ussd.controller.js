@@ -24,8 +24,8 @@ module.exports = {
       if (parts.length === 1) {
         // Ask for account number
         response = `CON Enter your account number:
-    0. Exit
-    99. Back`;
+                    0. Exit
+                    99. Back`;
       } else if (parts.length === 2) {
         const accountNumber = parts[1].trim();
 
@@ -43,11 +43,11 @@ module.exports = {
             response = `CON Account Status: ${
               info.isActive ? "Active" : "Suspended"
             }\nExpiry Date: ${info.dueDate}\nSelect from the options below:
-    1. Renew Subscription
-    2. Upgrade Subscription
-    3. Cancel Subscription
-    0. Exit
-    99. Back`;
+                1. Renew Subscription
+                2. Upgrade Subscription
+                3. Cancel Subscription
+                0. Exit
+                99. Back`;
           }
         }
       } else if (parts.length === 3) {
@@ -72,8 +72,8 @@ module.exports = {
             break;
           case "99":
             response = `CON Enter your account number:
-    0. Exit
-    99. Back`;
+                          0. Exit
+                          99. Back`;
             break;
           default:
             response = "END Invalid option selected.";
