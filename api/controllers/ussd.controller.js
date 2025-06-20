@@ -35,7 +35,13 @@ module.exports = {
         } else if (accountNumber === "99") {
           response = mainMenu;
         } else {
-          const details = await getCustomerDetails(accountNumber);
+          // const details = await getCustomerDetails(accountNumber);
+
+          const details = {
+            customer_name: "ET-F502",
+            isActive: true,
+            dueDate: "23/06/2025",
+          };
 
           if (!details) {
             response = `END Account ${accountNumber} not found.`;
