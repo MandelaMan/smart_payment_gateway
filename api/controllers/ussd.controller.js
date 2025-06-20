@@ -42,14 +42,14 @@ module.exports = {
           } else {
             const details = await getCustomerDetails();
 
-            response = `CON Account Status: ${
+            response = `CON ${details.customer_name}Account Status: ${
               info.isActive ? "Active" : "Suspended"
             }\nExpiry Date: ${info.dueDate}\nSelect from the options below:
                 1. Renew Subscription
                 2. Upgrade Subscription
                 3. Cancel Subscription
                 0. Exit
-                99. Back`;
+                99.Back`;
           }
         }
       } else if (parts.length === 3) {
@@ -87,7 +87,7 @@ module.exports = {
   customerData: async (req, res) => {
     const info = await getCustomerDetails();
 
-    res.json(info);
+    res.json(info.customer_name);
   },
   testFunctionality: async (req, res) => {
     const { customerNo } = req.body;
