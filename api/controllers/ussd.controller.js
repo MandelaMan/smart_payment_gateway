@@ -1,4 +1,4 @@
-const { getCustomerDetails } = require("./zoho.controller");
+const { getCustomerDetails } = require("./customer.controller");
 
 module.exports = {
   initiateUSSD: (req, res) => {
@@ -54,29 +54,23 @@ module.exports = {
         const accountNumber = parts[1].trim();
         const action = parts[2].trim();
 
-        switch (action) {
-          case "1":
-            // Renew Subscription
-            response = `END Your subscription for account ${accountNumber} has been renewed successfully.`;
-            break;
-          case "2":
-            // Upgrade Subscription
-            response = `END Your subscription for account ${accountNumber} has been upgraded. Our team will contact you shortly.`;
-            break;
-          case "3":
-            // Cancel Subscription
-            response = `END Your subscription for account ${accountNumber} has been cancelled.`;
-            break;
-          case "0":
-            response = "END Thank you for using our service!";
-            break;
-          case "99":
-            response = `CON Enter your account number:
-                          0. Exit
-                          99. Back`;
-            break;
-          default:
-            response = "END Invalid option selected.";
+        if (action === "1") {
+          // Renew Subscription
+          response = `END Your subscription for account ${accountNumber} has been renewed successfully.`;
+        } else if (action === "2") {
+          // Upgrade Subscription
+          response = `END Your subscription for account ${accountNumber} has been upgraded. Our team will contact you shortly.`;
+        } else if (action === "3") {
+          // Cancel Subscription
+          response = `END Your subscription for account ${accountNumber} has been cancelled.`;
+        } else if (action === "0") {
+          response = "END Thank you for using our service!";
+        } else if (action === "99") {
+          response = `CON Enter your account number:
+                        0. Exit
+                        99. Back`;
+        } else {
+          response = "END Invalid option selected.";
         }
       } else {
         response = "END Invalid entry. Please try again.";
@@ -87,6 +81,11 @@ module.exports = {
 
     res.set("Content-Type", "text/plain");
     res.send(response);
+  },
+  customerData: async (req, res) => {
+    const info = await getCustomerDetails();
+
+    res.json(info);
   },
   testFunctionality: async (req, res) => {
     const { customerNo } = req.body;

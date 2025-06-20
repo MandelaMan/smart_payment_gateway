@@ -2,7 +2,7 @@ const moment = require("moment");
 const axios = require("axios");
 
 module.exports = {
-  getCustomerDetails: (customerNo, next) => {
+  getCustomerDetails: (customerNo = "") => {
     const data = {
       contact_id: "4905046000000532348",
       contact_name: "ET-105 F502 Alex  Nyalita",

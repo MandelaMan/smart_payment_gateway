@@ -49,7 +49,7 @@ async function callZoho(
   return response.data;
 }
 
-// 📦 Exported module
+// Exported module
 module.exports = {
   // Local mock (unchanged)
   getCustomerDetails: (customerNo) => {
@@ -128,7 +128,7 @@ module.exports = {
     }
   },
 
-  // ✅ Create invoice
+  // Create invoice
   createInvoice: async (req, res) => {
     try {
       const { customer_id, items } = req.body;
@@ -152,7 +152,7 @@ module.exports = {
     }
   },
 
-  // ✅ Mark invoice as paid
+  // Mark invoice as paid
   markInvoiceAsPaid: async (req, res) => {
     try {
       const { invoice_id, customer_id, amount } = req.body;
