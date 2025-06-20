@@ -1,7 +1,7 @@
 const { getCustomerDetails } = require("./customer.controller");
 
 module.exports = {
-  initiateUSSD: (req, res) => {
+  initiateUSSD: async (req, res) => {
     const { phoneNumber, text = "" } = req.body;
 
     const input = text.trim();
@@ -40,6 +40,8 @@ module.exports = {
           if (!info) {
             response = `END Account ${accountNumber} not found.`;
           } else {
+            const details = await getCustomerDetails();
+
             response = `CON Account Status: ${
               info.isActive ? "Active" : "Suspended"
             }\nExpiry Date: ${info.dueDate}\nSelect from the options below:
