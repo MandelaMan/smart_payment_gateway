@@ -37,10 +37,14 @@ module.exports = {
           // Simulated account info
           const info = { isActive: true, dueDate: "23/06/2025" };
 
+          const customerData = getCustomerDetails();
+
+          const { customer_name } = customerData;
+
           if (!info) {
             response = `END Account ${accountNumber} not found.`;
           } else {
-            response = `CON Account Status: ${
+            response = `CON Account ${customer_name} Status: ${
               info.isActive ? "Active" : "Suspended"
             }\nExpiry Date: ${info.dueDate}\nSelect from the options below:
                 1. Renew Subscription
@@ -57,6 +61,7 @@ module.exports = {
         switch (action) {
           case "1":
             // Renew Subscription
+
             response = `END Your subscription for account ${accountNumber} has been renewed successfully.`;
             break;
           case "2":
