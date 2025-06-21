@@ -74,16 +74,17 @@ module.exports = {
 
   getSpecificCustomer: async (idOrEmail) => {
     try {
+      if (!idOrEmail || idOrEmail.trim().length === 0) {
+        return "Missing or empty customer identifier.";
+      }
+
+      const identifier = idOrEmail.trim();
+
       const zohoCustomerDetails = {
-        customer_name: "ET-F502 Alex Nyalita Zoho",
+        customer_name: "ET-F502 Alex Nyalita Zoho" + identifier,
       };
 
       return zohoCustomerDetails;
-      // if (!idOrEmail || idOrEmail.trim().length === 0) {
-      //   return "Missing or empty customer identifier.";
-      // }
-
-      // const identifier = idOrEmail.trim();
 
       // // Case: ID (only digits)
       // if (/^\d+$/.test(identifier)) {
