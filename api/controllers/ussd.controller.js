@@ -36,12 +36,14 @@ module.exports = {
         } else {
           const details = await getCustomerDetails(accountNumber);
 
+          const info = { isActive: true, dueDate: "23/06/2025" };
+
           if (!details) {
             response = `END Account ${accountNumber} not found.`;
           } else {
             response = `CON ${details}\nAccount Status: ${
-              details.isActive ? "Active" : "Suspended"
-            }\nExpiry Date: ${details.dueDate}\nSelect from the options below:
+              info.isActive ? "Active" : "Suspended"
+            }\nExpiry Date: ${info.dueDate}\nSelect from the options below:
                 1. Renew Subscription
                 2. Upgrade Subscription
                 3. Cancel Subscription
