@@ -1,4 +1,5 @@
 const { getCustomerDetails } = require("./customer.controller");
+require("dotenv").config();
 
 module.exports = {
   initiateUSSD: async (req, res) => {
@@ -9,7 +10,7 @@ module.exports = {
 
     let response;
 
-    const mainMenu = `CON Welcome to Starlynx Communications. Select from the options below:
+    const mainMenu = `CON ${process.env.ZOHO_ORG_ID} Welcome to Starlynx Communications. Select from the options below:
     1. New Customer Registration
     2. Manage Account
     0. Exit`;
