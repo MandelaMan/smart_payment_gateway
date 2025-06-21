@@ -38,9 +38,9 @@ module.exports = {
           // const details = await getCustomerDetails(accountNumber);
 
           const details = {
-            customer_name: "ET-F502",
+            customer_name: "ET-F502 Alex Nyalita",
             isActive: true,
-            dueDate: "23/06/2025",
+            dueDate: "30/06/2025",
           };
 
           if (!details) {
