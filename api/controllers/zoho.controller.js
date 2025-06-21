@@ -74,23 +74,25 @@ module.exports = {
 
   getSpecificCustomer: async (idOrEmail) => {
     try {
+      let zohoCustomerDetails = "ET-F502 Alex Nyalita Zoho";
+
       if (!idOrEmail || idOrEmail.trim().length === 0) {
         return "Missing or empty customer identifier.";
       }
 
       const identifier = idOrEmail.trim();
 
-      const zohoCustomerDetails = {
-        customer_name: "ET-F502 Alex Nyalita Zoho" + identifier,
-      };
+      // Case: ID (only digits)
+      if (/^\d+$/.test(identifier)) {
+        const data = await callZoho(`contacts/${identifier}`);
+        zohoCustomerDetails = JSON.stringify(data);
+        // return data.contact || "Customer not found with provided ID.";
+      }
+
+      // zohoCustomerDetails["customer_name"] =
+      //   "ET-F502 Alex Nyalita Zoho" + identifier;
 
       return zohoCustomerDetails;
-
-      // // Case: ID (only digits)
-      // if (/^\d+$/.test(identifier)) {
-      //   const data = await callZoho(`contacts/${identifier}`);
-      //   return data.contact || "Customer not found with provided ID.";
-      // }
 
       // // Case: Email address
       // if (identifier.includes("@")) {

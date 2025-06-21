@@ -39,7 +39,7 @@ module.exports = {
           if (!details) {
             response = `END Account ${accountNumber} not found.`;
           } else {
-            response = `CON ${details.customer_name}\nAccount Status: ${
+            response = `CON ${details}\nAccount Status: ${
               details.isActive ? "Active" : "Suspended"
             }\nExpiry Date: ${details.dueDate}\nSelect from the options below:
                 1. Renew Subscription
