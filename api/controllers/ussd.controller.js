@@ -1,5 +1,4 @@
 const { getCustomerDetails } = require("./customer.controller");
-const { getSpecificCustomer } = require("./zoho.controller");
 
 module.exports = {
   initiateUSSD: async (req, res) => {
@@ -35,13 +34,7 @@ module.exports = {
         } else if (accountNumber === "99") {
           response = mainMenu;
         } else {
-          // const details = await getCustomerDetails(accountNumber);
-
-          const details = {
-            customer_name: "ET-F502 Alex Nyalita",
-            isActive: true,
-            dueDate: "30/06/2025",
-          };
+          const details = await getCustomerDetails(accountNumber);
 
           if (!details) {
             response = `END Account ${accountNumber} not found.`;
