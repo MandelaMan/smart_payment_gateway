@@ -82,41 +82,16 @@ module.exports = {
 
       const identifier = idOrEmail.trim();
 
-      // Case: ID (only digits)
-      if (/^\d+$/.test(identifier)) {
-        const data = await callZoho(`contacts/${identifier}`);
-        zohoCustomerDetails = JSON.stringify(data);
-        // return data.contact || "Customer not found with provided ID.";
+      // Case: Name or general search text
+      const result = await callZoho("contacts", "GET", null, {
+        search_text: identifier,
+      });
+
+      if (!result.contacts || result.contacts.length === 0) {
+        return "Customer not found with provided name.";
       }
 
-      // zohoCustomerDetails["customer_name"] =
-      //   "ET-F502 Alex Nyalita Zoho" + identifier;
-
-      return zohoCustomerDetails;
-
-      // // Case: Email address
-      // if (identifier.includes("@")) {
-      //   const result = await callZoho("contacts", "GET", null, {
-      //     email: identifier,
-      //   });
-
-      //   if (!result.contacts || result.contacts.length === 0) {
-      //     return "Customer not found with provided email.";
-      //   }
-
-      //   return result.contacts[0];
-      // }
-
-      // // Case: Name or general search text
-      // const result = await callZoho("contacts", "GET", null, {
-      //   search_text: identifier,
-      // });
-
-      // if (!result.contacts || result.contacts.length === 0) {
-      //   return "Customer not found with provided name.";
-      // }
-
-      // return result.contacts[0];
+      return result.contacts[0].customer_name + "Zoho";
     } catch (error) {
       console.error(
         "Zoho fetch customer error:",
