@@ -91,7 +91,9 @@ module.exports = {
         return "Customer not found with provided name.";
       }
 
-      return result.contacts[0].customer_name + "Zoho";
+      // return result.contacts[0];
+
+      return JSON.stringify(result.contacts[0]);
     } catch (error) {
       console.error(
         "Zoho fetch customer error:",
