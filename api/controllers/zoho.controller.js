@@ -34,7 +34,7 @@ async function callZoho(
   const accessToken = await getAccessToken();
   const config = {
     method,
-    url: `${process.env.ZOHO_BASE_URL}/${endpoint}`,
+    url: `https://www.zohoapis.com/books/v3/${endpoint}`,
     headers: {
       Authorization: `Zoho-oauthtoken ${accessToken}`,
       "Content-Type": "application/json",
