@@ -74,33 +74,50 @@ module.exports = {
 
   getSpecificCustomer: async (idOrEmail) => {
     try {
-      if (!idOrEmail || idOrEmail.trim().length === 0) {
-        return "Missing or empty customer identifier.";
-      }
-      if (/^\d+$/.test(idOrEmail)) {
-        const data = await callZoho(`contacts/${idOrEmail}`);
-        return data.contact;
-      }
-      if (idOrEmail.includes("@")) {
-        const result = await callZoho("contacts", "GET", null, {
-          email: idOrEmail,
-        });
-        if (result.contacts.length === 0) {
-          return "Customer not found with provided email.";
-        }
-        return result.contacts[0];
-      }
-      const result = await callZoho("contacts", "GET", null, {
-        search_text: idOrEmail,
-      });
-      if (!result.contacts || result.contacts.length === 0) {
-        return "Customer not found with provided name.";
-      }
-      return result.contacts[0];
+      const zohoCustomerDetails = {
+        customer_name: "ET-F502 Alex Nyalita Zoho",
+      };
+
+      return zohoCustomerDetails;
+      // if (!idOrEmail || idOrEmail.trim().length === 0) {
+      //   return "Missing or empty customer identifier.";
+      // }
+
+      // const identifier = idOrEmail.trim();
+
+      // // Case: ID (only digits)
+      // if (/^\d+$/.test(identifier)) {
+      //   const data = await callZoho(`contacts/${identifier}`);
+      //   return data.contact || "Customer not found with provided ID.";
+      // }
+
+      // // Case: Email address
+      // if (identifier.includes("@")) {
+      //   const result = await callZoho("contacts", "GET", null, {
+      //     email: identifier,
+      //   });
+
+      //   if (!result.contacts || result.contacts.length === 0) {
+      //     return "Customer not found with provided email.";
+      //   }
+
+      //   return result.contacts[0];
+      // }
+
+      // // Case: Name or general search text
+      // const result = await callZoho("contacts", "GET", null, {
+      //   search_text: identifier,
+      // });
+
+      // if (!result.contacts || result.contacts.length === 0) {
+      //   return "Customer not found with provided name.";
+      // }
+
+      // return result.contacts[0];
     } catch (error) {
       console.error(
         "Zoho fetch customer error:",
-        error.response?.data || error.message
+        error?.response?.data || error.message
       );
       return "Error trying to execute function.";
     }

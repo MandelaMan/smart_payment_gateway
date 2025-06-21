@@ -4,16 +4,10 @@ const { getSpecificCustomer } = require("./zoho.controller");
 
 module.exports = {
   getCustomerDetails: async (customerNo) => {
-    // const zohoCustomerDetails = {
-    //   ...(await getSpecificCustomer(customerNo)),
-    //   isActive: true,
-    //   dueDate: "23/06/2025",
-    // };
-
     const zohoCustomerDetails = {
-      customer_name: "ET-F502 Alex Nyalita Customer",
+      ...(await getSpecificCustomer(customerNo)),
       isActive: true,
-      dueDate: "30/06/2025",
+      dueDate: "23/06/2025",
     };
 
     return zohoCustomerDetails;
