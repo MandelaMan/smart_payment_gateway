@@ -34,7 +34,7 @@ async function callZoho(
   const accessToken = await getAccessToken();
   const config = {
     method,
-    url: `https://www.zohoapis.com/books/v3/${endpoint}`,
+    url: `${process.env.ZOHO_BASE_URL}/${endpoint}`,
     headers: {
       Authorization: `Zoho-oauthtoken ${accessToken}`,
       "Content-Type": "application/json",
@@ -80,7 +80,7 @@ module.exports = {
 
       if (/^\d+$/.test(idOrEmail)) {
         const data = await callZoho(`contacts/${idOrEmail}`);
-        return JSON.stringify(data.contact);
+        return data.contact;
       }
 
       const result = await callZoho("contacts", "GET", null, {
@@ -91,7 +91,7 @@ module.exports = {
         return "Customer not found with provided name.";
       }
 
-      return JSON.stringify(result.contacts[0]); // return first match
+      return result.contacts[0]; // return first match
     } catch (error) {
       console.error(
         "Zoho fetch customer error:",

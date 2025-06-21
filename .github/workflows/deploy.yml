@@ -22,7 +22,7 @@ jobs:
 
       - name: Copy files to server
         run: |
-          rsync -avz --delete --exclude '.git' ./ ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }}:${{ secrets.DEPLOY_PATH }}
+          rsync -avz --delete --exclude '.git' --exclude '.env' ./ ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }}:${{ secrets.DEPLOY_PATH }}
 
       - name: Install dependencies and restart app with PM2
         run: |

@@ -1,16 +1,21 @@
 const moment = require("moment");
-const axios = require("axios");
 const { getSpecificCustomer } = require("./zoho.controller");
 
 module.exports = {
   getCustomerDetails: async (customerNo) => {
-    // const zohoCustomerDetails = {
-    //   ...(await getSpecificCustomer(customerNo)),
-    //   isActive: true,
-    //   dueDate: "23/06/2025",
-    // };
+    const zohoCustomerDetails = {
+      ...(await getSpecificCustomer(customerNo)),
+      isActive: true,
+      dueDate: "23/06/2025",
+    };
 
-    const zohoCustomerDetails = await getSpecificCustomer(customerNo);
+    // let customer;
+
+    // const zohoCustomerDetails = await getSpecificCustomer(customerNo);
+
+    // customer["name"] = zohoCustomerDetails["customer_name"];
+    // customer["isActive"] = true;
+    // customer["dueDate"] = "30/06/2025";
 
     return zohoCustomerDetails;
   },

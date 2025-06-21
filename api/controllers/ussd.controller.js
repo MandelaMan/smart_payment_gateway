@@ -10,7 +10,7 @@ module.exports = {
 
     let response;
 
-    const mainMenu = `CON ${process.env.ZOHO_ORG_ID} Welcome to Starlynx Communications. Select from the options below:
+    const mainMenu = `CON Welcome to Starlynx Communications. Select from the options below:
     1. New Customer Registration
     2. Manage Account
     0. Exit`;
@@ -42,7 +42,7 @@ module.exports = {
           if (!details) {
             response = `END Account ${accountNumber} not found.`;
           } else {
-            response = `CON ${details}\nAccount Status: ${
+            response = `CON ${details.customer_name}\nAccount Status: ${
               info.isActive ? "Active" : "Suspended"
             }\nExpiry Date: ${info.dueDate}\nSelect from the options below:
                 1. Renew Subscription
