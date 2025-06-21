@@ -44,10 +44,11 @@ module.exports = {
           } else {
             response = `CON ${details.customer_name}\nAccount Status: ${
               details.isActive ? "Active" : "Suspended"
-            }\nExpiry Date: ${info.dueDate}\nSelect from the options below:
+            }\nExpiry Date: ${info.dueDate}\n Package: 30/MBPs
                 1. Renew Subscription
                 2. Upgrade Subscription
-                3. Cancel Subscription
+                3. Downgrade Subscription
+                4. Cancel Subscription
                 0. Exit
                 99.Back`;
           }
