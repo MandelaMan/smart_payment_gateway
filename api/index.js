@@ -6,8 +6,9 @@ require("dotenv").config();
 
 //import Routes
 const ussdRoutes = require("./routes/ussd.route");
-const zohoRoutes = require("./routes/zoho.route");
-const customerRoutes = require("./routes/customer.route");
+// const zohoRoutes = require("./routes/zoho.route");
+// const customerRoutes = require("./routes/customer.route");
+// const mpesaRoutes = require("./routes/mpesa.route");
 
 const app = express();
 app.use(express.json());
@@ -16,8 +17,9 @@ app.use(cookieParser());
 app.use(cors());
 
 app.use("/ussd", ussdRoutes);
-app.use("/zoho", zohoRoutes);
-app.use("/customer", customerRoutes);
+// app.use("/zoho", zohoRoutes);
+// app.use("/customer", customerRoutes);
+// app.use("/mpesa", mpesaRoutes);
 
 app.get("/", (req, res) => {
   res.json({ message: "Hello. Welcome to Starlynx API!" });

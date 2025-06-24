@@ -1,13 +1,12 @@
 const moment = require("moment");
 const axios = require("axios");
 
-// Auth: Refresh token to get access_token
-async function getAccessToken() {
+const getAccessToken = async () => {
   try {
     const secret_key = process.env.MPESA_CONSUMER_SECRET;
     const consumer_key = process.env.MPESA_CONSUMER_KEY;
 
-    const auth = new Buffer.from(`${consumer_key}:${secret_key}`).toString(
+    const auth = Buffer.from(`${consumer_key}:${secret_key}`).toString(
       "base64"
     );
 
@@ -17,71 +16,74 @@ async function getAccessToken() {
       },
     };
 
-    await axios
-      .get(
-        `https://sandbox.safaricom.co.ke/oauth/v1/generate?grant_type=client_credentials`,
-        config
-      )
-      .then((response) => {
-        return response.data.access_token;
-      });
+    const response = await axios.get(
+      "https://sandbox.safaricom.co.ke/oauth/v1/generate?grant_type=client_credentials",
+      config
+    );
+
+    return response.data.access_token; // return the token
   } catch (error) {
-    console.log(error.message);
+    console.error("Error getting access token:", error.message);
+    throw error; // Propagate the error to the caller
   }
-}
+};
 
-module.exports = {
-  initiateSTKPush: async (phone, amount) => {
+const initiateSTKPush = async (phone, amount) => {
+  try {
+    const token = await getAccessToken();
+
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+
     let user_phone = phone.replace(/^0+/, "");
-
     const Timestamp = moment().format("YYYYMMDDHHmmss");
-
     const shortcode = process.env.MPESA_SHORTCODE;
-
     const passkey = process.env.MPESA_PASS_KEY;
-
     const password = new Buffer.from(shortcode + passkey + Timestamp).toString(
       "base64"
     );
 
-    let inputs = {
+    const payload = {
       BusinessShortCode: shortcode,
       Password: password,
       Timestamp,
       TransactionType: "CustomerBuyGoodsOnline",
       Amount: amount,
-      PartyA: `254${user_phone}`,
+      PartyA: `${user_phone}`,
       PartyB: shortcode,
-      PhoneNumber: `254${user_phone}`,
+      PhoneNumber: `${user_phone}`,
       CallBackURL: "https://api.starlynx.biz",
       AccountReference: "Test",
       TransactionDesc: "Test",
     };
 
-    const accessToken = await getAccessToken();
+    const response = await axios.post(
+      "https://sandbox.safaricom.co.ke/mpesa/stkpush/v1/processrequest",
+      payload,
+      config
+    );
 
-    const config = {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-    };
+    return response.data;
+  } catch (error) {
+    console.error("STK Push Error:", error.message);
+    return { error: "Initiate STKPush" + user_phone + error.message };
+  }
+};
 
-    await axios
-      .post(
-        `https://sandbox.safaricom.co.ke/mpesa/stkpush/v1/processrequest`,
-        inputs,
-        config
-      )
-      .then((response) => {
-        return response.data;
-      })
-      .catch((err) => {
-        return err.message;
-      });
-  },
-  test: (req, res) => {
-    res.json({
-      message: "ok",
-    });
-  },
+const test = async (req, res) => {
+  try {
+    const results = await initiateSTKPush("+254701057515", 100);
+    res.json(results);
+  } catch (err) {
+    res.status(500).json({ error: "Test" + err.message });
+  }
+};
+
+module.exports = {
+  getAccessToken,
+  initiateSTKPush,
+  test,
 };
