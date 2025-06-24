@@ -51,15 +51,6 @@ async function callZoho(
 
 // Exported module
 module.exports = {
-  // Local mock (unchanged)
-  getCustomerDetails: (customerNo) => {
-    const mock = {
-      ACC100101: { balance: 2540.75, name: "Alice Kyalo" },
-      ACC200202: { balance: 113.4, name: "John Doe" },
-    };
-    return mock[customerNo] || null;
-  },
-
   // Get all customers
   getZohoCustomers: async (req, res) => {
     try {

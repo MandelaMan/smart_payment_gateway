@@ -1,9 +1,12 @@
 const { getCustomerDetails } = require("./customer.controller");
+const { initiateSTKPush } = require("./mpesa.controller");
 require("dotenv").config();
 
 module.exports = {
   initiateUSSD: async (req, res) => {
     const { phoneNumber, text = "" } = req.body;
+
+    let packageAmount = 1;
 
     const input = text.trim();
     const parts = input.split("*");
@@ -20,11 +23,12 @@ module.exports = {
     } else if (input === "0") {
       response = "END Thank you for using our service!";
     } else if (parts[0] === "1") {
-      response = `END Please call 0713 400 200 or visit https://starlynx.biz/ ${phoneNumber}`;
+      // ${phoneNumber}
+      response = `END Please call 0713 400 200 or visit https://starlynx.biz/`;
     } else if (parts[0] === "2") {
       if (parts.length === 1) {
         // Ask for account number
-        response = `CON Enter your account number:
+        response = `CON Enter your Customer Number:
                     0. Exit
                     99. Back`;
       } else if (parts.length === 2) {
@@ -37,16 +41,17 @@ module.exports = {
         } else {
           const details = await getCustomerDetails(accountNumber);
 
-          const info = { isActive: true, dueDate: "23/06/2025" };
-
           if (!details) {
             response = `END Account ${accountNumber} not found.`;
           } else {
+            //sent amount to send o the customer
+            packageAmount = 3000;
+
             response = `CON ${
               details.customer_name
             }\nPackage: 30/MBPs - Ksh 4,700\nAccount Status: ${
               details.isActive ? "Active" : "Suspended"
-            }\nExpiry Date: ${info.dueDate}\n 
+            }\nExpiry Date: ${details.dueDate}\n 
                 1. Renew Subscription
                 2. Upgrade Subscription
                 3. Downgrade Subscription
@@ -61,7 +66,11 @@ module.exports = {
 
         if (action === "1") {
           // Renew Subscription
-          response = `END Your subscription for account ${accountNumber} has been renewed successfully.`;
+          const results = JSON.stringify(
+            initiateSTKPush(phoneNumber, packageAmount)
+          );
+
+          response = `END Your subscription for account ${results}-${accountNumber}-${phoneNumber}-${packageAmount} has been renewed successfully.`;
         } else if (action === "2") {
           // Upgrade Subscription
           response = `END Your subscription for account ${accountNumber} has been upgraded. Our team will contact you shortly.`;

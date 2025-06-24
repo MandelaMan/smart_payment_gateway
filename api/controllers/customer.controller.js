@@ -1,34 +1,15 @@
 const moment = require("moment");
 const { getSpecificCustomer } = require("./zoho.controller");
+const { getTISPCustomer } = require("./tisp.controller");
 
 module.exports = {
   getCustomerDetails: async (customerNo) => {
-    const zohoCustomerDetails = {
+    const customerDetails = {
       ...(await getSpecificCustomer(customerNo)),
-      isActive: true,
-      dueDate: "23/06/2025",
+      ...(await getTISPCustomer(customerNo)),
     };
 
-    // let customer;
-
-    // const zohoCustomerDetails = await getSpecificCustomer(customerNo);
-
-    // customer["name"] = zohoCustomerDetails["customer_name"];
-    // customer["isActive"] = true;
-    // customer["dueDate"] = "30/06/2025";
-
-    return zohoCustomerDetails;
-  },
-  getCustomerDetailsTest: async (req, res) => {
-    const { customerNo } = req.params;
-
-    const zohoCustomerDetails = {
-      ...(await getSpecificCustomer(customerNo)),
-      isActive: true,
-      dueDate: "23/06/2025",
-    };
-
-    res.json(zohoCustomerDetails);
+    return customerDetails;
   },
   test: (req, res) => {
     res.json({
