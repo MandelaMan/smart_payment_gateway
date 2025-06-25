@@ -69,7 +69,7 @@ const initiateUSSD = async (req, res) => {
         if (results) {
           response = `END Your subscription for account ${JSON.stringify(
             results
-          )}-${accountNumber}-${phoneNumber}${packageAmount} has been renewed successfully.`;
+          )}-${accountNumber}has been renewed successfully.`;
         }
       } else if (action === "2") {
         // Upgrade Subscription
