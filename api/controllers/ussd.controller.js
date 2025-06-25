@@ -44,7 +44,6 @@ const initiateUSSD = async (req, res) => {
           response = `END Account ${accountNumber} not found.`;
         } else {
           //sent amount to send o the customer
-          packageAmount = 3000;
 
           response = `CON ${
             details.customer_name
@@ -65,11 +64,13 @@ const initiateUSSD = async (req, res) => {
 
       if (action === "1") {
         // Renew Subscription
-        const results = JSON.stringify(
-          initiateSTKPush(phoneNumber, packageAmount)
-        );
+        const results = initiateSTKPush(phoneNumber, packageAmount);
 
-        response = `END Your subscription for account ${results}-${accountNumber}-${phoneNumber}${packageAmount} has been renewed successfully.`;
+        if (results) {
+          response = `END Your subscription for account ${JSON.stringify(
+            results
+          )}-${accountNumber}-${phoneNumber}${packageAmount} has been renewed successfully.`;
+        }
       } else if (action === "2") {
         // Upgrade Subscription
         response = `END Your subscription for account ${accountNumber} has been upgraded. Our team will contact you shortly.`;
