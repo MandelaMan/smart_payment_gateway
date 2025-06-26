@@ -5,8 +5,6 @@ require("dotenv").config();
 const initiateUSSD = async (req, res) => {
   const { phoneNumber, text = "" } = req.body;
 
-  let packageAmount = 1;
-
   const input = text.trim();
   const parts = input.split("*");
 
@@ -64,13 +62,15 @@ const initiateUSSD = async (req, res) => {
 
       if (action === "1") {
         // Renew Subscription
-        const results = initiateSTKPush(phoneNumber, 99);
 
-        if (results) {
-          response = `END Your subscription for account ${JSON.stringify(
-            results
-          )}-${accountNumber}has been renewed successfully.`;
-        }
+        response = `END Your subscription for account ${accountNumber} has been renewed successfully.`;
+        // const results = initiateSTKPush(phoneNumber, 99);
+
+        // if (results) {
+        //   response = `END Your subscription for account ${JSON.stringify(
+        //     results
+        //   )}-${accountNumber}has been renewed successfully.`;
+        // }
       } else if (action === "2") {
         // Upgrade Subscription
         response = `END Your subscription for account ${accountNumber} has been upgraded. Our team will contact you shortly.`;
