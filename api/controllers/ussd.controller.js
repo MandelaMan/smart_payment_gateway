@@ -19,9 +19,9 @@ const initiateUSSD = async (req, res) => {
 
   let response;
 
-  const mainMenu = `CON Welcome to Starlynx Communications. Select from the options below:
+  const mainMenu = `CON Welcome to Starlynx Communications Limited. Select from the options below:
   1. New Customer Registration
-  2. Manage Account
+  2. Manage My Account
   0. Exit`;
 
   if (input === "" || input === "99") {
