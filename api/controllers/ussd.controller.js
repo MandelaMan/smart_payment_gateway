@@ -2,8 +2,17 @@ const { getCustomerDetails } = require("./customer.controller");
 const { initiateSTKPush } = require("./mpesa.controller");
 require("dotenv").config();
 
+const mainMenuSetup = () => {
+  return `CON Welcome to Starlynx Communications. Select from the options below:
+  1. New Customer Registration
+  2. Manage Account
+  0. Exit`;
+};
+
 const initiateUSSD = async (req, res) => {
   const { phoneNumber, text = "" } = req.body;
+
+  let packageAmount = 1;
 
   const input = text.trim();
   const parts = input.split("*");
@@ -62,15 +71,13 @@ const initiateUSSD = async (req, res) => {
 
       if (action === "1") {
         // Renew Subscription
+        const results = initiateSTKPush(phoneNumber, 99);
 
-        response = `END Your subscription for account ${accountNumber} has been renewed successfully.`;
-        // const results = initiateSTKPush(phoneNumber, 99);
-
-        // if (results) {
-        //   response = `END Your subscription for account ${JSON.stringify(
-        //     results
-        //   )}-${accountNumber}has been renewed successfully.`;
-        // }
+        if (results) {
+          response = `END Your subscription for account ${JSON.stringify(
+            results
+          )}-${accountNumber}has been renewed successfully.`;
+        }
       } else if (action === "2") {
         // Upgrade Subscription
         response = `END Your subscription for account ${accountNumber} has been upgraded. Our team will contact you shortly.`;

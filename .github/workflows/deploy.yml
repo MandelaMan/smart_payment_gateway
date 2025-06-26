@@ -1,3 +1,43 @@
+# name: Deploy Node.js App
+
+# on:
+#   push:
+#     branches:
+#       - main
+
+# jobs:
+#   deploy:
+#     runs-on: ubuntu-latest
+
+#     steps:
+#       - name: Checkout code
+#         uses: actions/checkout@v3
+
+#       - name: Setup SSH
+#         run: |
+#           mkdir -p ~/.ssh
+#           echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+#           chmod 600 ~/.ssh/id_rsa
+#           ssh-keyscan -H ${{ secrets.SERVER_IP }} >> ~/.ssh/known_hosts
+
+#       - name: Copy files to server
+#         run: |
+#           rsync -avz --delete --exclude '.git' --exclude '.env' ./ ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }}:${{ secrets.DEPLOY_PATH }}
+
+#       - name: Install dependencies and restart app with PM2
+#         run: |
+#           ssh ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} << 'EOF'
+#             cd ${{ secrets.DEPLOY_PATH }}
+#             yarn install
+
+#             # Start or restart using correct entry file
+#             pm2 describe smart_payment_gateway > /dev/null \
+#               && pm2 restart smart_payment_gateway \
+#               || pm2 start api/index.js --name smart_payment_gateway
+
+#             pm2 save
+#           EOF
+
 name: Deploy Node.js App
 
 on:
@@ -20,20 +60,47 @@ jobs:
           chmod 600 ~/.ssh/id_rsa
           ssh-keyscan -H ${{ secrets.SERVER_IP }} >> ~/.ssh/known_hosts
 
-      - name: Copy files to server
+      - name: Deploy to server
         run: |
-          rsync -avz --delete --exclude '.git' --exclude '.env' ./ ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }}:${{ secrets.DEPLOY_PATH }}
+          rsync -avz --delete \
+            --exclude '.git' \
+            --exclude '.env' \
+            ./ ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }}:${{ secrets.DEPLOY_PATH }}
 
       - name: Install dependencies and restart app with PM2
         run: |
           ssh ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} << 'EOF'
+            set -e  # Exit on error
+
+            echo "🚀 Switching to deployment path"
             cd ${{ secrets.DEPLOY_PATH }}
-            yarn install
 
-            # Start or restart using correct entry file
-            pm2 describe smart_payment_gateway > /dev/null \
-              && pm2 restart smart_payment_gateway \
-              || pm2 start api/index.js --name smart_payment_gateway
+            echo "📦 Installing dependencies"
+            if [ -f yarn.lock ]; then
+              if ! command -v yarn >/dev/null 2>&1; then
+                echo "🔧 Installing Yarn via Corepack"
+                command -v corepack >/dev/null 2>&1 && corepack enable
+                corepack prepare yarn@stable --activate
+              fi
+              yarn install
+            else
+              npm install
+            fi
 
+            echo "🛠 Ensuring PM2 is installed"
+            if ! command -v pm2 >/dev/null 2>&1; then
+              npm install -g pm2
+            fi
+
+            echo "🚦 Restarting or starting app with PM2"
+            if pm2 describe smart_payment_gateway > /dev/null 2>&1; then
+              pm2 restart smart_payment_gateway
+            else
+              pm2 start api/index.js --name smart_payment_gateway
+            fi
+
+            echo "💾 Saving PM2 process list"
             pm2 save
+
+            echo "✅ Deployment complete"
           EOF
