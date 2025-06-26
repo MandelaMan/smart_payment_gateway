@@ -2,6 +2,13 @@ const { getCustomerDetails } = require("./customer.controller");
 const { initiateSTKPush } = require("./mpesa.controller");
 require("dotenv").config();
 
+const mainMenuSetup = () => {
+  return `CON Welcome to Starlynx Communications. Select from the options below:
+  1. New Customer Registration
+  2. Manage Account
+  0. Exit`;
+};
+
 const initiateUSSD = async (req, res) => {
   const { phoneNumber, text = "" } = req.body;
 
@@ -64,7 +71,7 @@ const initiateUSSD = async (req, res) => {
 
       if (action === "1") {
         // Renew Subscription
-        const results = initiateSTKPush(phoneNumber, packageAmount);
+        const results = initiateSTKPush(phoneNumber, 99);
 
         if (results) {
           response = `END Your subscription for account ${JSON.stringify(

@@ -1,5 +1,5 @@
 const express = require("express");
-const { test, getAccessToken } = require("../controllers/mpesa.controller");
+const { test } = require("../controllers/mpesa.controller");
 
 const router = express.Router();
 

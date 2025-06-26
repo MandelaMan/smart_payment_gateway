@@ -38,7 +38,7 @@ const initiateSTKPush = async (phone, amount) => {
       },
     };
 
-    let user_phone = phone.replace(/^0+/, "");
+    let user_phone = phone.replace(/^(\+|0)+/, "");
     const Timestamp = moment().format("YYYYMMDDHHmmss");
     const shortcode = process.env.MPESA_SHORTCODE;
     const passkey = process.env.MPESA_PASS_KEY;
@@ -75,7 +75,8 @@ const initiateSTKPush = async (phone, amount) => {
 
 const test = async (req, res) => {
   try {
-    const results = await initiateSTKPush("+254701057515", 100);
+    const results = await initiateSTKPush("+254701057515", 1);
+
     res.json(results);
   } catch (err) {
     res.status(500).json({ error: "Test" + err.message });
