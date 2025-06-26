@@ -72,7 +72,8 @@ const initiateUSSD = async (req, res) => {
       if (action === "1") {
         // Renew Subscription
         const results = await initiateSTKPush(phoneNumber, 99);
-        response = `CON Processing your request you will receive MPESA prompt, proceed to enter pin.`;
+
+        response = `END Processing your request you will receive MPESA prompt, proceed to enter pin.`;
 
         // if (results) {
         //   response = `END Your subscription for account --${JSON.stringify(
