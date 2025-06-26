@@ -71,13 +71,15 @@ const initiateUSSD = async (req, res) => {
 
       if (action === "1") {
         // Renew Subscription
-        const results = initiateSTKPush(phoneNumber, 99);
+        const results = await initiateSTKPush(phoneNumber, 99);
 
-        if (results) {
-          response = `END Your subscription for account ${JSON.stringify(
-            results
-          )}-${accountNumber}has been renewed successfully.`;
-        }
+        response = `CON Processing your request you will receive MPESA prompt, proceed to enter pin.`;
+
+        // if (results) {
+        //   response = `END Your subscription for account --${JSON.stringify(
+        //     results
+        //   )}-${accountNumber}has been renewed successfully.`;
+        // }
       } else if (action === "2") {
         // Upgrade Subscription
         response = `END Your subscription for account ${accountNumber} has been upgraded. Our team will contact you shortly.`;
