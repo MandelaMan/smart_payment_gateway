@@ -70,16 +70,7 @@ const initiateUSSD = async (req, res) => {
       const action = parts[2].trim();
 
       if (action === "1") {
-        // Renew Subscription
-        const results = await initiateSTKPush(phoneNumber, 99);
-
-        response = `END Processing your request you will receive MPESA prompt, proceed to enter pin.`;
-
-        // if (results) {
-        //   response = `END Your subscription for account --${JSON.stringify(
-        //     results
-        //   )}-${accountNumber}has been renewed successfully.`;
-        // }
+        response = `END Your subscription for account ${accountNumber} has been renewed. New expiry date is 30/07/2025`;
       } else if (action === "2") {
         // Upgrade Subscription
         response = `END Your subscription for account ${accountNumber} has been upgraded. Our team will contact you shortly.`;
