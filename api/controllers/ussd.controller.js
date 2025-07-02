@@ -70,7 +70,15 @@ const initiateUSSD = async (req, res) => {
       const action = parts[2].trim();
 
       if (action === "1") {
-        response = `END Subscription for account ${accountNumber} has been renewed. New expiry date is 30/07/2025`;
+        let instructions = "Instructions";
+
+        results = await initiateSTKPush(phoneNumber, 100);
+
+        if (results) {
+          instructions = "Executed";
+        }
+
+        response = `END ${instructions} Subscription for account ${accountNumber} has been renewed. New expiry date is 30/07/2025`;
       } else if (action === "2") {
         // Upgrade Subscription
         response = `END Your subscription for account ${accountNumber} has been upgraded. Our team will contact you shortly.`;
