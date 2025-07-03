@@ -35,7 +35,7 @@ function App() {
               <button type="submit" class="login-btn">
                 Login
               </button>
-              <div class="divider">or</div>
+              {/* <div class="divider">or</div> */}
             </form>
           </div>
         </div>
