@@ -1,5 +1,32 @@
 const moment = require("moment");
 const axios = require("axios");
+const fs = require("fs");
+const { readJsonFromFile } = require("../../utils/helperFunctions");
+
+const mpesaCallbackFunction = async (req, res) => {
+  readJsonFromFile("./logs/transactions.json", (err, data) => {
+    if (err) {
+      console.log(err);
+    }
+
+    const updatedTransactions = [...data, req.body];
+
+    fs.writeFile(
+      "./logs/transactions.json",
+      JSON.stringify(updatedTransactions, null, 2),
+      (err, data) => {
+        if (err) {
+          console.log(err);
+        } else {
+          // run function after confirming actual payment
+          res.status(200).json({
+            message: "ok",
+          });
+        }
+      }
+    );
+  });
+};
 
 const getAccessToken = async () => {
   try {
@@ -55,7 +82,7 @@ const initiateSTKPush = async (phone, amount) => {
       PartyA: `${user_phone}`,
       PartyB: shortcode,
       PhoneNumber: `${user_phone}`,
-      CallBackURL: "https://api.starlynx.biz",
+      CallBackURL: "https://api.starlynx.biz/mpesa/callback",
       AccountReference: "Test",
       TransactionDesc: "Test",
     };
@@ -84,6 +111,7 @@ const test = async (req, res) => {
 };
 
 module.exports = {
+  mpesaCallbackFunction,
   getAccessToken,
   initiateSTKPush,
   test,

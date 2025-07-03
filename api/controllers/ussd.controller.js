@@ -70,12 +70,11 @@ const initiateUSSD = async (req, res) => {
       const action = parts[2].trim();
 
       if (action === "1") {
-        let instructions = "Instructions";
-
         results = await initiateSTKPush(phoneNumber, 100);
 
         if (results) {
-          instructions = "Executed";
+          response =
+            "CON A payment request has been sent. Please await MPESA screen transaction, enter PIN to complete transaction";
         }
 
         response = `END ${instructions} Subscription for account ${accountNumber} has been renewed. New expiry date is 30/07/2025`;
