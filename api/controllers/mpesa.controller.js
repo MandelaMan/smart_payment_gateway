@@ -8,9 +8,7 @@ const mpesaCallbackFunction = async (req, res) => {
     if (err) {
       console.log(err);
     }
-
     const updatedTransactions = [...data, req.body];
-
     fs.writeFile(
       "./logs/transactions.json",
       JSON.stringify(updatedTransactions, null, 2),
