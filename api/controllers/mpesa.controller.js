@@ -9,33 +9,22 @@ const mpesaCallbackFunction = async (req, res) => {
       console.log(err);
     }
     const updatedTransactions = [...data, req.body];
-
-    res.status(200).json(updatedTransactions);
+    fs.writeFile(
+      "./logs/transactions.json",
+      JSON.stringify(updatedTransactions, null, 2),
+      (err, data) => {
+        if (err) {
+          console.log(err);
+        } else {
+          // run function after confirming actual payment
+          res.status(200).json({
+            message: "ok",
+          });
+        }
+      }
+    );
   });
 };
-
-// const mpesaCallbackFunction = async (req, res) => {
-//   readJsonFromFile("./logs/transactions.json", (err, data) => {
-//     if (err) {
-//       console.log(err);
-//     }
-//     const updatedTransactions = [...data, req.body];
-//     fs.writeFile(
-//       "./logs/transactions.json",
-//       JSON.stringify(updatedTransactions, null, 2),
-//       (err, data) => {
-//         if (err) {
-//           console.log(err);
-//         } else {
-//           // run function after confirming actual payment
-//           res.status(200).json({
-//             message: "ok",
-//           });
-//         }
-//       }
-//     );
-//   });
-// };
 
 const getAccessToken = async () => {
   try {
@@ -86,7 +75,7 @@ const initiateSTKPush = async (phone, amount) => {
       BusinessShortCode: shortcode,
       Password: password,
       Timestamp,
-      TransactionType: "CustomerBuyGoodsOnline",
+      TransactionType: "CustomerPayBillOnline",
       Amount: amount,
       PartyA: `${user_phone}`,
       PartyB: shortcode,
