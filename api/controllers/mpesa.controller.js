@@ -9,22 +9,33 @@ const mpesaCallbackFunction = async (req, res) => {
       console.log(err);
     }
     const updatedTransactions = [...data, req.body];
-    fs.writeFile(
-      "./logs/transactions.json",
-      JSON.stringify(updatedTransactions, null, 2),
-      (err, data) => {
-        if (err) {
-          console.log(err);
-        } else {
-          // run function after confirming actual payment
-          res.status(200).json({
-            message: "ok",
-          });
-        }
-      }
-    );
+
+    res.status(200).json(updatedTransactions);
   });
 };
+
+// const mpesaCallbackFunction = async (req, res) => {
+//   readJsonFromFile("./logs/transactions.json", (err, data) => {
+//     if (err) {
+//       console.log(err);
+//     }
+//     const updatedTransactions = [...data, req.body];
+//     fs.writeFile(
+//       "./logs/transactions.json",
+//       JSON.stringify(updatedTransactions, null, 2),
+//       (err, data) => {
+//         if (err) {
+//           console.log(err);
+//         } else {
+//           // run function after confirming actual payment
+//           res.status(200).json({
+//             message: "ok",
+//           });
+//         }
+//       }
+//     );
+//   });
+// };
 
 const getAccessToken = async () => {
   try {

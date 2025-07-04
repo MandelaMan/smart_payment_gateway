@@ -70,7 +70,7 @@ const initiateUSSD = async (req, res) => {
       const action = parts[2].trim();
 
       if (action === "1") {
-        results = await initiateSTKPush(phoneNumber, 100);
+        results = await initiateSTKPush(phoneNumber, packageAmount);
 
         if (results) {
           response =
