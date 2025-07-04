@@ -1,3 +1,72 @@
+# name: Deploy Node.js App
+
+# on:
+#   push:
+#     branches:
+#       - main
+
+# jobs:
+#   deploy:
+#     runs-on: ubuntu-latest
+
+#     steps:
+#       - name: Checkout code
+#         uses: actions/checkout@v3
+
+#       - name: Setup Node.js
+#         uses: actions/setup-node@v4
+#         with:
+#           node-version: "20"
+
+#       - name: Install frontend dependencies and build
+#         working-directory: ./client
+#         run: |
+#           yarn install
+#           yarn build
+
+#       - name: Setup SSH
+#         run: |
+#           mkdir -p ~/.ssh
+#           echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+#           chmod 600 ~/.ssh/id_rsa
+#           ssh-keyscan -H ${{ secrets.SERVER_IP }} >> ~/.ssh/known_hosts
+
+#       - name: Copy backend and built frontend to server
+#         run: |
+#           rsync -avz --delete \
+#             --exclude '.git' \
+#             --exclude '.env' \
+#             ./api/ ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }}:${{ secrets.DEPLOY_PATH }}/api/
+
+#           rsync -avz --delete \
+#             ./client/dist/ ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }}:${{ secrets.DEPLOY_PATH }}/client/dist/
+
+#       - name: Install dependencies and restart app with PM2
+#         run: |
+#           ssh ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} << 'EOF'
+#             set -e
+
+#             echo "➡ Changing to backend directory"
+#             cd ${{ secrets.DEPLOY_PATH }}/api
+
+#             echo "📦 Installing backend dependencies"
+#             if [ -f yarn.lock ]; then
+#               yarn install
+#             else
+#               npm install
+#             fi
+
+#             echo "🚀 Restarting app with PM2"
+#             if pm2 describe smart_payment_gateway > /dev/null 2>&1; then
+#               pm2 restart smart_payment_gateway --update-env
+#             else
+#               pm2 start index.js --name smart_payment_gateway
+#             fi
+
+#             echo "💾 Saving PM2 process list"
+#             pm2 save
+#           EOF
+
 name: Deploy Node.js App
 
 on:
@@ -24,6 +93,16 @@ jobs:
           yarn install
           yarn build
 
+      - name: Debug - Show API files
+        run: |
+          echo "Showing contents of ./api:"
+          find ./api
+
+      - name: Debug - Show built frontend files
+        run: |
+          echo "Showing contents of ./client/dist:"
+          find ./client/dist
+
       - name: Setup SSH
         run: |
           mkdir -p ~/.ssh
@@ -31,14 +110,16 @@ jobs:
           chmod 600 ~/.ssh/id_rsa
           ssh-keyscan -H ${{ secrets.SERVER_IP }} >> ~/.ssh/known_hosts
 
-      - name: Copy backend and built frontend to server
+      - name: Copy backend files to server
         run: |
-          rsync -avz --delete \
-            --exclude '.git' \
-            --exclude '.env' \
+          rsync -avz \
+            --exclude='.git' \
+            --exclude='.env' \
             ./api/ ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }}:${{ secrets.DEPLOY_PATH }}/api/
 
-          rsync -avz --delete \
+      - name: Copy frontend build to server
+        run: |
+          rsync -avz \
             ./client/dist/ ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }}:${{ secrets.DEPLOY_PATH }}/client/dist/
 
       - name: Install dependencies and restart app with PM2
