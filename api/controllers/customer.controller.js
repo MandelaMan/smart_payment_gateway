@@ -11,7 +11,7 @@ module.exports = {
   getCustomerDetails: async (customerNo) => {
     const customerDetails = {
       ...(await getSpecificCustomer(customerNo)),
-      ...(await getTISPCustomer(toUpperCase(client))),
+      ...(await getTISPCustomer(client)),
     };
 
     return customerDetails;
