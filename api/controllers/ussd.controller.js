@@ -1,3 +1,4 @@
+const { readableText } = require("../../utils/helperFunctions");
 const { getCustomerDetails } = require("./customer.controller");
 const { initiateSTKPush } = require("./mpesa.controller");
 require("dotenv").config();
@@ -52,11 +53,11 @@ const initiateUSSD = async (req, res) => {
         } else {
           //sent amount to send o the customer
 
-          response = `CON ${
-            details.customer_name
-          }\nPackage: 30/MBPs - Ksh 4,700\nAccount Status: ${
-            details.isActive ? "Active" : "Suspended"
-          }\nExpiry Date: ${details.dueDate}\n 
+          response = `CON ${details.customer_name}\nPackage: ${
+            details.package
+          } - Ksh ${details.amount}\nAccount Status: ${readableText(
+            details.status
+          )}\nExpiry Date: ${details.dueDate}\n 
               1. Renew Subscription
               2. Upgrade Subscription
               3. Downgrade Subscription

@@ -31,18 +31,9 @@ const getTISPCustomer = async (clientNo) => {
     throw new Error("Client number is required.");
   }
 
-  let output;
-
   try {
     const data = await callTISP("POST", { client: clientNo });
-
-    if (data) {
-      output = {
-        dueDate: "30/06/2023",
-        isActive: data === "Active" ? true : false,
-      };
-    }
-    return output; // or return data.client if the API returns nested data
+    return JSON.parse(data);
   } catch (error) {
     console.error("Failed to get TISP customer:", error.message);
     throw error;

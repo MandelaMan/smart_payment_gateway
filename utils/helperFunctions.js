@@ -2,6 +2,11 @@ const { verify, sign } = require("jsonwebtoken");
 const axios = require("axios");
 const fs = require("fs");
 
+const readableText = (text) => {
+  if (!text) return "";
+  return text.charAt(0).toUpperCase() + text.slice(1).toLowerCase();
+};
+
 const errorHandler = (statusCode, message) => {
   const error = new Error();
 
@@ -29,4 +34,5 @@ const readJsonFromFile = (file_location, cb) => {
 module.exports = {
   errorHandler,
   readJsonFromFile,
+  readableText,
 };
