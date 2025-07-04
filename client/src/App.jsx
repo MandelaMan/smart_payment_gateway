@@ -8,16 +8,14 @@ function App() {
         <div class="left-panel">
           <div class="branding">
             <img src={logo} alt="Finotic Logo" class="logo" />
-            {/* <h2>Franchise</h2> */}
           </div>
           <div class="info">
             <div class="welcome-message">
-              <h2>Franchise Management Portal</h2>
-              <p>Start managing your clients faster and better</p>
+              <h2>Customer Management Portal</h2>
+              <p>Start managing your clients faster and much better</p>
             </div>
           </div>
         </div>
-
         <div class="right-panel">
           <div class="form-container">
             {/* <h2>Account Management</h2> */}
