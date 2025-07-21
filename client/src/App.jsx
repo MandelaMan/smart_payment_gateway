@@ -12,7 +12,7 @@ function App() {
           <div class="info">
             <div class="welcome-message">
               <h2>Customer Management Portal</h2>
-              <p>Start managing your clients faster and much better</p>
+              <p>Start managing your account and clients efficiently</p>
             </div>
           </div>
         </div>
