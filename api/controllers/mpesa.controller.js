@@ -1,30 +1,93 @@
 const moment = require("moment");
 const axios = require("axios");
 const fs = require("fs");
-const { readJsonFromFile } = require("../../utils/helperFunctions");
+const path = require("path");
+const { promisify } = require("util");
+
+const readFile = promisify(fs.readFile);
+const writeFile = promisify(fs.writeFile);
+
+const transactionsFile = path.join(__dirname, "../../logs/transactions.json");
 
 const mpesaCallbackFunction = async (req, res) => {
-  readJsonFromFile("./logs/transactions.json", (err, data) => {
-    if (err) {
-      console.log(err);
+  try {
+    const callback = req.body.Body.stkCallback;
+
+    const transaction = {
+      MerchantRequestID: callback.MerchantRequestID,
+      CheckoutRequestID: callback.CheckoutRequestID,
+      ResultCode: callback.ResultCode,
+      ResultDesc: callback.ResultDesc,
+      Timestamp: new Date().toISOString(),
+    };
+
+    // Extract metadata only if payment is successful
+    if (callback.ResultCode === 0) {
+      const metadata = callback.CallbackMetadata?.Item || [];
+
+      const getItemValue = (name) =>
+        metadata.find((item) => item.Name === name)?.Value;
+
+      transaction.Amount = getItemValue("Amount");
+      transaction.MpesaReceiptNumber = getItemValue("MpesaReceiptNumber");
+      transaction.TransactionDate = getItemValue("TransactionDate");
+      transaction.PhoneNumber = getItemValue("PhoneNumber");
+
+      // ✅ Add logic here: update DB, activate service, etc.
+      console.log(`✅ Payment confirmed for ${transaction.PhoneNumber}`);
+    } else {
+      console.log(`❌ Payment failed: ${callback.ResultDesc}`);
     }
-    const updatedTransactions = [...data, req.body];
-    fs.writeFile(
-      "./logs/transactions.json",
-      JSON.stringify(updatedTransactions, null, 2),
-      (err, data) => {
-        if (err) {
-          console.log(err);
-        } else {
-          // run function after confirming actual payment
-          res.status(200).json({
-            message: "ok",
-          });
-        }
-      }
+
+    // Read and update transaction log file
+    let existing = [];
+    try {
+      const content = await readFile(transactionsFile, "utf8");
+      existing = JSON.parse(content);
+    } catch (readErr) {
+      console.warn("Could not read existing log file:", readErr.message);
+    }
+
+    existing.push(transaction);
+
+    await writeFile(
+      transactionsFile,
+      JSON.stringify(existing, null, 2),
+      "utf8"
     );
-  });
+
+    res.status(200).json({ message: "Callback received and processed" });
+  } catch (error) {
+    console.error("Callback processing error:", error.message);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
 };
+
+// const fs = require("fs");
+// const { readJsonFromFile } = require("../../utils/helperFunctions");
+
+// const mpesaCallbackFunction = async (req, res) => {
+//   readJsonFromFile("./logs/transactions.json", (err, data) => {
+//     if (err) {
+//       console.log(err);
+//     }
+//     const updatedTransactions = [...data, req.body];
+//     fs.writeFile(
+//       "./logs/transactions.json",
+//       JSON.stringify(updatedTransactions, null, 2),
+//       (err, data) => {
+//         if (err) {
+//           console.log(err);
+//         } else {
+//           // run function after confirming actual payment
+//           res.status(200).json({
+//             message: "ok",
+//           });
+//         }
+//       }
+//     );
+//   });
+// };
 
 const getAccessToken = async () => {
   try {

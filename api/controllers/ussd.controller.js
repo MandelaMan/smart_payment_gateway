@@ -57,7 +57,7 @@ const initiateUSSD = async (req, res) => {
             details.package
           } - Ksh ${details.amount}\nAccount Status: ${readableText(
             details.status
-          )}\nExpiry Date: ${details.dueDate}\n 
+          )}\nExpires On: ${details.dueDate}\n 
               1. Renew Subscription
               2. Upgrade Subscription
               3. Downgrade Subscription
@@ -75,10 +75,12 @@ const initiateUSSD = async (req, res) => {
 
         if (results) {
           response =
-            "CON A payment request has been sent. Please await MPESA screen transaction, enter PIN to complete transaction";
+            "END A payment request has been sent. Please check your phone to complete the payment with MPESA.";
+        } else {
+          response = "END Failed to initiate payment. Please try again later.";
         }
 
-        response = `END ${instructions} Subscription for account ${accountNumber} has been renewed. New expiry date is 30/07/2025`;
+        // response = `END ${instructions} Subscription for account ${accountNumber} has been renewed. New expiry date is 30/07/2025`;
       } else if (action === "2") {
         // Upgrade Subscription
         response = `END Your subscription for account ${accountNumber} has been upgraded. Our team will contact you shortly.`;
