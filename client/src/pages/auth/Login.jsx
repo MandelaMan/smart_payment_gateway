@@ -1,6 +1,25 @@
 import logo from "../../assets/logo.png";
+import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
+  const navigate = useNavigate();
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
+
+  const onSubmit = (data) => {
+    if (data.email === "admin@email.com" && data.password === "admin") {
+      // Redirect to dashboard or any other route
+      navigate("/dashboard");
+    } else {
+      alert("Invalid credentials");
+    }
+  };
+
   return (
     <>
       <div class="container">
@@ -19,13 +38,21 @@ const Login = () => {
           <div class="form-container">
             {/* <h2>Account Management</h2> */}
             <p>Login to access your account</p>
-            <form>
+            <form onSubmit={handleSubmit(onSubmit)}>
               <input
                 type="email"
                 placeholder="Enter Username or Email"
-                required
+                {...register("email", { required: "Email is required" })}
               />
-              <input type="password" placeholder="Enter Password" required />
+              {errors.email && <p className="error">{errors.email.message}</p>}
+              <input
+                type="password"
+                placeholder="Enter Password"
+                {...register("password", { required: "Password is required" })}
+              />
+              {errors.password && (
+                <p className="error">{errors.password.message}</p>
+              )}
               <div class="forgot">
                 <a href="#">Forgot password?</a>
               </div>
