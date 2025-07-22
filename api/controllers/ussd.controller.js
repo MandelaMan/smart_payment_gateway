@@ -10,6 +10,10 @@ const mainMenuSetup = () => {
   0. Exit`;
 };
 
+const completedTransaction = (account) => {
+  response = `END Subscription for account ${account} has been renewed. New expiry date is 30/07/2025`;
+};
+
 const initiateUSSD = async (req, res) => {
   const { phoneNumber, text = "" } = req.body;
 
@@ -79,8 +83,6 @@ const initiateUSSD = async (req, res) => {
         } else {
           response = "END Failed to initiate payment. Please try again later.";
         }
-
-        // response = `END ${instructions} Subscription for account ${accountNumber} has been renewed. New expiry date is 30/07/2025`;
       } else if (action === "2") {
         // Upgrade Subscription
         response = `END Your subscription for account ${accountNumber} has been upgraded. Our team will contact you shortly.`;
@@ -114,6 +116,7 @@ const test = async (req, res) => {
 };
 
 module.exports = {
+  completedTransaction,
   initiateUSSD,
   test,
 };

@@ -1,12 +1,14 @@
 const express = require("express");
 const {
   test,
-  mpesaCallbackFunction,
+  mpesaTransactionsInCallback,
+  mpesaTransactionsOutCallback,
 } = require("../controllers/mpesa.controller");
 
 const router = express.Router();
 
 router.get("/", test);
-router.post("/callback", mpesaCallbackFunction);
+router.post("/callbackIn", mpesaTransactionsInCallback);
+router.post("/callbackOut", mpesaTransactionsOutCallback);
 
 module.exports = router;
