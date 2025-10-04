@@ -16,7 +16,7 @@ import {
   // selectFullName,
 } from "../../redux/auth/authSlice";
 
-const Admin = () => {
+const Staff = () => {
   // const [view, setView] = useState("create"); // 'create' | 'history' | 'templates' | 'import'
 
   // const actions = useMemo(
@@ -91,4 +91,4 @@ const Admin = () => {
   );
 };
 
-export default Admin;
+export default Staff;
